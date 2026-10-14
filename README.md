@@ -1,6 +1,6 @@
 ---
 
-## Project: 3-Tier Architecture using Terraform on AWS
+# AWS Three-Tier Architecture with Monitoring (Terraform)
 
 ### 🛠️ Tools Required
 
@@ -80,4 +80,10 @@ Auto-scaling group with ALB
 
 RDS (MySQL/Postgres)
 
+## Monitoring
 
+- **SNS:** an email alert topic and subscription (`sns.tf`)
+- **CloudWatch:** alarms for ALB 5xx errors, ASG CPU, RDS CPU and RDS free storage, all notifying SNS (`cloudwatch.tf`)
+- **Datadog:** AWS integration and monitors for the same signals (`datadog.tf`)
+
+Datadog keys and the alert email are passed as environment variables (`TF_VAR_datadog_api_key`, `TF_VAR_datadog_app_key`, `TF_VAR_alert_email`) and are never committed.
