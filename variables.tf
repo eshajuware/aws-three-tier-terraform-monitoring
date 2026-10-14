@@ -90,3 +90,21 @@ variable "multi-az-deployment" {
   description = "Create a Standby DB Instance"
   type        =  bool
 }
+variable "datadog_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "datadog_app_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "datadog_api_url" {
+  type    = string
+  default = "https://api.datadoghq.com/"
+}
+
+variable "alert_email" {
+  type = string
+}
