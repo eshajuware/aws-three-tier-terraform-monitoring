@@ -1,7 +1,6 @@
 ---
 
 # AWS Three-Tier Architecture with Monitoring (Terraform)
-# AWS Three-Tier Architecture with Monitoring (Terraform)
 
 ## Tools Required (Windows PowerShell, run as Administrator)
 
