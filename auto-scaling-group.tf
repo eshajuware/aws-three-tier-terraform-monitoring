@@ -5,8 +5,8 @@
 resource "aws_launch_template" "auto-scaling-group" {
   name_prefix   = "auto-scaling-group"
   image_id      = "ami-052efd3df9dad4825"
-  instance_type = "t2.micro"
-  user_data     = base64encode(file("install-apache.sh"))
+  instance_type = "t3.micro"
+  user_data     = base64encode(replace(file("install-apache.sh"), "\r\n", "\n"))
   key_name      = "project"
 
   network_interfaces {
@@ -36,7 +36,7 @@ resource "aws_autoscaling_group" "asg-1" {
 resource "aws_launch_template" "auto-scaling-group-private" {
   name_prefix   = "auto-scaling-group-private"
   image_id      = "ami-052efd3df9dad4825"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   key_name      = "project"
 
   network_interfaces {
