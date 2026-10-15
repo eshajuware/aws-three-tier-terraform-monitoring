@@ -1,84 +1,40 @@
 ---
 
 # AWS Three-Tier Architecture with Monitoring (Terraform)
+# AWS Three-Tier Architecture with Monitoring (Terraform)
 
-### 🛠️ Tools Required
+## Tools Required (Windows PowerShell, run as Administrator)
 
-Install these tools **before running Terraform**:
+```powershell
+winget install -e --id Hashicorp.Terraform
+winget install -e --id Git.Git
+winget install -e --id Amazon.AWSCLI
+```
 
-```bash
-sudo apt update
-sudo apt install -y unzip curl git
+Close PowerShell, open a new window, and check:
 
-
-✅ Install AWS CLI
-
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-aws --version
-
-
-✅ Install Terraform
-
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update
-sudo apt install terraform
+```powershell
 terraform -version
+git --version
+aws --version
+```
 
+## Configure AWS Credentials
 
-✅ Configure AWS Credentials
-
+```powershell
 aws configure
+aws sts get-caller-identity
+```
 
-✅ Apache Web Server Installation (on EC2)
+Region used: `us-east-1`
 
-# Update package list and install Apache
-sudo apt update
-sudo apt install -y apache2
+## Architecture
 
-# Start and enable Apache
-sudo systemctl start apache2
-sudo systemctl enable apache2
-
-# Go to the default Apache web directory
-cd /var/www/html
-ls
-
-# Edit or create the index.html file
-sudo vi index.html
-
-
-🔽 Paste the following content into index.html:
-
-<html>
-  <body>
-    <h1>WEB TIER SUCCESS</h1>
-  </body>
-</html>
-
-
-✅ Initialize and Apply Terraform
-
-terraform init
-terraform validate
-terraform plan
-terraform apply
-
-
-✅ Architecture
-
-VPC with public & private subnets
-
-Internet Gateway & NAT Gateway
-
-Security groups for EC2, RDS
-
-Auto-scaling group with ALB
-
-RDS (MySQL/Postgres)
+- VPC with public and private subnets
+- Internet Gateway and NAT Gateway
+- Security groups for EC2 and RDS
+- Auto Scaling Group behind an ALB
+- RDS MySQL (Multi-AZ)
 
 ## Monitoring
 
@@ -86,4 +42,23 @@ RDS (MySQL/Postgres)
 - **CloudWatch:** alarms for ALB 5xx errors, ASG CPU, RDS CPU and RDS free storage, all notifying SNS (`cloudwatch.tf`)
 - **Datadog:** AWS integration and monitors for the same signals (`datadog.tf`)
 
-Datadog keys and the alert email are passed as environment variables (`TF_VAR_datadog_api_key`, `TF_VAR_datadog_app_key`, `TF_VAR_alert_email`) and are never committed.
+## Deploy
+
+```powershell
+$env:TF_VAR_alert_email = "you@example.com"
+$env:TF_VAR_datadog_api_key = "YOUR_API_KEY"
+$env:TF_VAR_datadog_app_key = "YOUR_APP_KEY"
+
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+Datadog keys and the alert email are passed as environment variables and are never committed.
+
+## Clean up
+
+```powershell
+terraform destroy
+```
